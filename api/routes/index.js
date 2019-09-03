@@ -11,13 +11,13 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/encuesta', async(req, res) => {
-  const { 
+  const {
+    folioCliente, 
     respuesta1, 
     respuesta2, 
     respuesta3_justi,
     respuesta4
   } = req.body
-  let folioCliente = 10
   console.log(req.body)
   const newEncuesta = await encuesta.createEncuesta(folioCliente, respuesta1, respuesta2, respuesta3_justi, respuesta4)
   res.json({

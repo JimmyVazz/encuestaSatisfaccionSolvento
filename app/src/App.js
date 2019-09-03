@@ -7,10 +7,10 @@ class App extends Component{
   constructor(){
     super();
     this.state = {
-        respuesta1:"",
-        respuesta2:"",
+        respuesta1:"Rápido",
+        respuesta2:"Sí",
         respuesta3_justi:"",
-        respuesta4:""
+        respuesta4:"Sí"
     }
 }
 
@@ -19,19 +19,27 @@ handleChange = (event) => {
 }
 
 handleSubmit = (event) => {
-    event.preventDefault();
-    const { respuesta1 , respuesta2 , respuesta3_justi , respuesta4} = this.state
+  
 
-    fetch('http://localhost:3000/encuesta',{
+    event.preventDefault();
+    console.log(this.state)
+    const { respuesta1 , respuesta2 , respuesta3_justi , respuesta4} = this.state
+    let folioCliente = 10
+    fetch('https://solvento-encuesta.herokuapp.com/encuesta',{
         method:"POST",
-        mode:"no-cors",
         headers: {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json' 
         },
-        body: JSON.stringify({respuesta1 , respuesta2 , respuesta3_justi , respuesta4})
-    }).then(response => {
+        body: JSON.stringify({folioCliente, respuesta1 , respuesta2 , respuesta3_justi , respuesta4})
+    })
+    .then(response => {
+      if (response.status !== 200){
+        console.error("error")
+      }
         console.log(response)
-    });
+    }).catch(err=>{
+      console.error(err)
+    })
 }
 
 
@@ -41,7 +49,7 @@ handleSubmit = (event) => {
       
   <div className="container">
   <img id="imagen" src={logosol01}/>
-  <div className="row">
+  {/* <div className="row"> */}
     <div className="col-12 col-sm-6 offset-sm-3 py-3">
   <form onSubmit={this.handleSubmit} >
   <div className="form-group" align="center">
@@ -74,11 +82,11 @@ handleSubmit = (event) => {
     </select>
   </div>
  
-  <button id="boton" type="submit" className="btn btn-outline-success">Enviar</button>
-   
+  <button type="submit" className="btn btn-outline-success">Enviar</button>
+      
   </form>
   </div>
-  </div>
+  {/* </div> */}
 </div>
     );
   }
