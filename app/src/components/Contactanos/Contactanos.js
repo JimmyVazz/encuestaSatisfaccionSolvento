@@ -7,7 +7,10 @@ class Contactanos extends Component{
   render(){
     
     return (
-      <img src={logosol01}></img>  
+      <div>
+      <img src={logosol01}></img>
+      <h1> ¡Gracias!, tomaremos en cuenta tus comentarios para mejorar.</h1> 
+      </div> 
     );
   }
 }
