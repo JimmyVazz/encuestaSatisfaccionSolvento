@@ -29,4 +29,8 @@ router.post('/encuesta', async(req, res) => {
   })
 })
 
+router.get('/rh', (req, res) => {
+  
+})
+
 module.exports = router;
