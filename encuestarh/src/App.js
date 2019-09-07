@@ -15,8 +15,32 @@ class App extends Component{
       respuesta2_justi:"",
       respuesta3:"Sí",
       respuesta4:"Sí",
-      respuesta5: ""
+      respuesta5: "",
+	latitude: "",
+	longitude: ""
     }
+this.getMyLocation = this.getMyLocation.bind(this)
+}
+
+
+componentDidMount() {
+  this.getMyLocation()
+}
+
+getMyLocation() {
+  const location = window.navigator && window.navigator.geolocation
+  
+  if (location) {
+    location.getCurrentPosition((position) => {
+      this.setState({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      })
+    }, (error) => {
+      this.setState({ latitude: 'err-latitude', longitude: 'err-longitude' })
+    })
+  }
+
 }
 
 handleChange = (event) => {
@@ -28,14 +52,16 @@ handleSubmit = (event) => {
   alert("¡Gracias por tus comentarios!. Ya puedes cerrar esta página.")
     event.preventDefault();
     console.log(this.state)
-    const { respuesta1 , respuesta2_justi , respuesta3, respuesta4, respuesta5} = this.state
-    let folioEmpresa = this.aleatorio(1000, 9000)
+    const { respuesta1 , respuesta2_justi , respuesta3, respuesta4, respuesta5, latitude, longitude} = this.state
+    let latitudes = String(latitude)
+    let longitudes = String(longitude)
+    let folioEmpresa = ""+latitudes+", "+longitudes
     fetch('https://solvento-encuesta.herokuapp.com/rh',{
         method:"POST",
         headers: {
           'Content-Type': 'application/json' 
         },
-        body: JSON.stringify({folioEmpresa, respuesta1 , respuesta2_justi , respuesta3, respuesta4, respuesta5})
+        body: JSON.stringify({folioEmpresa, respuesta1 , respuesta2_justi , respuesta3, respuesta4, respuesta5, latitude, longitude})
     })
     .then(response => {
       if (response.status !== 200){

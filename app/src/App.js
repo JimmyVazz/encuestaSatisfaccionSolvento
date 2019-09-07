@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import logosol01 from './logosol01.svg'
 import Contactanos from './components/Contactanos/Contactanos'
+import { geolocated } from "react-geolocated";
 
 class App extends Component{
 
@@ -15,9 +16,35 @@ class App extends Component{
         respuesta1:"Rápido",
         respuesta2:"Sí",
         respuesta3_justi:"",
-        respuesta4:"Sí"
+        respuesta4:"Sí",
+        latitude: "",
+        longitud: ""
     }
+    this.getMyLocation = this.getMyLocation.bind(this)
 }
+
+
+componentDidMount() {
+  this.getMyLocation()
+}
+
+getMyLocation() {
+  const location = window.navigator && window.navigator.geolocation
+  
+  if (location) {
+    location.getCurrentPosition((position) => {
+      this.setState({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      })
+    }, (error) => {
+      this.setState({ latitude: 'err-latitude', longitude: 'err-longitude' })
+    })
+  }
+
+}
+
+
 
 handleChange = (event) => {
     this.setState({[event.target.name]:event.target.value})
@@ -26,16 +53,19 @@ handleChange = (event) => {
 handleSubmit = (event) => {
   
   alert("¡Gracias por tus comentarios!. Ya puedes cerrar esta página.")
-    event.preventDefault();
+  event.preventDefault();
+  
     console.log(this.state)
-    const { respuesta1 , respuesta2 , respuesta3_justi , respuesta4} = this.state
-    let folioCliente = this.aleatorio(1000, 9000)
+    const { respuesta1 , respuesta2 , respuesta3_justi , respuesta4, latitude, longitude} = this.state
+    let latitudes = String(latitude)
+    let longitudes = String(longitude)
+    let folioCliente = ""+latitudes+", "+longitudes
     fetch('https://solvento-encuesta.herokuapp.com/encuesta',{
         method:"POST",
         headers: {
           'Content-Type': 'application/json' 
         },
-        body: JSON.stringify({folioCliente, respuesta1 , respuesta2 , respuesta3_justi , respuesta4})
+        body: JSON.stringify({folioCliente, respuesta1 , respuesta2 , respuesta3_justi , respuesta4, latitude, longitude})
     })
     .then(response => {
       if (response.status !== 200){
